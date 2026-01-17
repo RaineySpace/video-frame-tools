@@ -33,14 +33,14 @@ export function useScreenshotTimeline(video: string | HTMLVideoElement | null | 
 
   useEffect(() => {
     if (!video || count <= 0) {
-      setScreenshotTimeline([]);
+      setScreenshotTimeline(Array(count).fill(null));
       return undefined;
     }
 
     let isActive = true;
     const controller = new AbortController();
 
-    setScreenshotTimeline([]);
+    setScreenshotTimeline(Array(count).fill(null));
 
     (async () => {
       let index = 0;

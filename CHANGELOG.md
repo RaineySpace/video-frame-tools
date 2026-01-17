@@ -1,5 +1,11 @@
 # video-frame-tools
 
+## 0.0.5
+
+### Patch Changes
+
+- 修复截图数组被异常置空的问题
+
 ## 0.0.4
 
 ### Patch Changes
