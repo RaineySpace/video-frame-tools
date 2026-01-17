@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { getScreenshotTimeline } from '../utils';
 
 /**
@@ -18,9 +18,9 @@ import { getScreenshotTimeline } from '../utils';
  * );
  * ```
  */
-export function useScreenshotTimeline(video: string | HTMLVideoElement | null | undefined, count = 10): (string | null)[] {
+export function useScreenshotTimeline(video: string | HTMLVideoElement | null | undefined, count = 10): string[] {
   const blobUrlCollectorRef = useRef<Set<string>>(new Set());
-  const [screenshotTimeline, setScreenshotTimeline] = useState<(string | null)[]>(Array(count).fill(null));
+  const [screenshotTimeline, setScreenshotTimeline] = useState<string[]>([]);
 
   useEffect(() => {
     return () => {
@@ -33,26 +33,20 @@ export function useScreenshotTimeline(video: string | HTMLVideoElement | null | 
 
   useEffect(() => {
     if (!video || count <= 0) {
-      setScreenshotTimeline(Array(count).fill(null));
+      setScreenshotTimeline([]);
       return undefined;
     }
 
     let isActive = true;
     const controller = new AbortController();
 
-    setScreenshotTimeline(Array(count).fill(null));
+    setScreenshotTimeline([]);
 
     (async () => {
-      let index = 0;
       for await (const frame of getScreenshotTimeline(video, count, controller.signal)) {
         if (!isActive) return;
         const url = URL.createObjectURL(frame)
-        setScreenshotTimeline((prev) => {
-          const newTimeline = [...prev];
-          newTimeline[index] = url;
-          return newTimeline;
-        });
-        index++;
+        setScreenshotTimeline((prev) => ([...prev, url]));
         blobUrlCollectorRef.current.add(url);
       }
     })();
@@ -63,5 +57,5 @@ export function useScreenshotTimeline(video: string | HTMLVideoElement | null | 
     };
   }, [video, count]);
 
-  return screenshotTimeline;
+  return useMemo(() => Array(count).fill(null).map((_, index) => screenshotTimeline[index] ?? null), [screenshotTimeline, count]);
 }

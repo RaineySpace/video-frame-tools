@@ -1,5 +1,11 @@
 # video-frame-tools
 
+## 0.0.6
+
+### Patch Changes
+
+- 修复截图数组异常问题
+
 ## 0.0.5
 
 ### Patch Changes
