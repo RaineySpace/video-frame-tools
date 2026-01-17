@@ -1,5 +1,11 @@
 # video-frame-tools
 
+## 0.0.4
+
+### Patch Changes
+
+- 导出 captureVideoFrame,并填充未生成截图的帧为 null
+
 ## 0.0.3
 
 ### Patch Changes
